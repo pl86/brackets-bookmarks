@@ -1,0 +1,111 @@
+/* Bookmarks */
+.toshsharma-bookmarks-bookmark .CodeMirror-linenumber { 
+    background-color: #80C7F7 !important;
+    color: #000 !important;
+}
+.toshsharma-bookmarks-bookmark.CodeMirror-activeline .CodeMirror-linenumber {
+    border: 1px solid #80C7F7; !important;
+    color: inherit !important;
+}
+.CodeMirror .toshsharma-bookmarks-flash {
+    -webkit-animation: toshsharma-bookmarks-flash 0.3s;
+}
+@-webkit-keyframes toshsharma-bookmarks-flash {
+    from { background: #A0D7F7; } 
+    to { background: inherit; }
+}
+
+/* Toolbar Icon */
+#toshsharma-bookmarks-icon {
+    background: url(../images/toshsharma.bookmarks-icon.svg) no-repeat 0 0;
+}
+#toshsharma-bookmarks-icon.active {
+    background: url(../images/toshsharma.bookmarks-icon-active.svg) no-repeat 0 0;
+}
+
+/* Panel */
+/* Panel header */
+#toshsharma-bookmarks-panel header h1 {
+    font-size: 14px;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+}
+#toshsharma-bookmarks-panel #toshsharma-view-all {
+	position: absolute;
+	top: 0px;
+	right: 50px;
+}
+#toshsharma-bookmarks-panel #toshsharma-view-all input[type="checkbox"] {
+	margin-right: 3px;
+}
+#toshsharma-bookmarks-panel #toshsharma-view-all span {
+	display: inline-block;
+	color: #898989;
+}
+
+/* Panel table */
+#toshsharma-bookmarks-panel table {
+    width: 100%;
+}
+#toshsharma-bookmarks-panel table tr.inactive {
+	display: none;
+}
+#toshsharma-bookmarks-panel table tr.inactive.view-all {
+	display: table-row;
+	background-color: inherit;
+	opacity: 0.5;
+}
+#toshsharma-bookmarks-panel table tr.inactive td.delete {
+	display: none;
+}
+#toshsharma-bookmarks-panel table td.line {
+    width: 30px;
+    padding-left: 10px;
+}
+#toshsharma-bookmarks-panel table td.tag {
+    width: 150px;
+    padding-right: 10px;
+}
+#toshsharma-bookmarks-panel table td.file {
+	width: 150px;
+	padding-right: 10px;
+}
+#toshsharma-bookmarks-panel table td.delete {
+    width: 7px;
+    padding: 0 10px;
+    vertical-align: middle;
+}
+#toshsharma-bookmarks-panel table td.delete a {
+    display: block;
+    font-size: 15px;
+    width: 17px;
+    height: 17px;
+	text-align: center;
+    color: #ffffff;
+    background-color: #c95353;
+    border-radius: 34px;
+}
+#toshsharma-bookmarks-panel table td.delete a:hover {
+    text-decoration: none;
+    background-color: #ea2020;
+}
+#toshsharma-bookmarks-panel .labelIcon {
+    padding: 2px 0;
+    color: #ffffff;
+    background-color: #47b1fd;
+    border-radius: 5px;
+    text-align: center;
+}
+#toshsharma-bookmarks-panel .labelIcon input[type="text"] {
+    position: relative;
+    font-size: 13px;
+    width: 92%;
+    padding: 0;
+    margin: -3px 0 0 0;
+    text-align: center;
+    color: #ffffff;
+    background: none;
+    border: none;
+    line-height: 1;
+}

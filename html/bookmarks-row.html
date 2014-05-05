@@ -1,0 +1,9 @@
+{{#bookmarks}}
+    <tr>
+        <td class="line">{{originalLineNum}}</td>
+        <td class="tag"><div class="labelIcon"><input type="text" value="{{label}}" title="{{label}}"></div></td>
+        <td class="text">{{#bookmark.lines}} {{text}} {{/bookmark.lines}}</td>
+        <td class="file" title="{{filePath}}">{{fileName}}</td>
+        <td class="delete"><a href="#" class="remove">&times;</a></td>
+    </tr>
+{{/bookmarks}}
