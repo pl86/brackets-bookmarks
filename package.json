@@ -1,7 +1,7 @@
 {
     "name": "georapbox.bookmarks",
     "title": "Bookmarks for Brackets",
-    "description": "Navigate within a document using bookmarks. Cmd-F4 to toggle, F4 to jump to bookmarks.",
+    "description": "Add bookmarks within a document for quick reference.",
     "homepage": "https://github.com/georapbox/brackets-bookmarks",
     "version": "0.1.0",
     "author": "George Raptis <georapbox@gmail.com> (http://georap.gr)",
