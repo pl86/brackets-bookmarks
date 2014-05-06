@@ -1,30 +1,29 @@
 /*
- * Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
+ * The MIT License (MIT)
+ * Copyright (c) 2014 George Raptis. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- */
+*/
 
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global define, $, Mustache, brackets, window */
-
-/** Extension to allow a user to navigate within a document using bookmarks */
 
 define(function (require, exports, module) {
     'use strict';
@@ -38,11 +37,13 @@ define(function (require, exports, module) {
         PanelManager = brackets.getModule('view/PanelManager'),
         AppInit = brackets.getModule('utils/AppInit'),
         
-        $bmlIcon = $('<a title="Bookmarks" id="toshsharma-bookmarks-icon"></a>'),
+        $bmlIcon = $('<a title="Bookmarks" id="georapbox-bookmarks-icon"></a>'),
         bookmarksPanelTemplate = require('text!html/bookmarks-panel.html'),
         bookmarksRowTemplate = require('text!html/bookmarks-row.html'),
         panel,
         $bookmarksPanel,
+        
+        COMMAND_ID = 'georapbox_execute',
         
         _activeEditor = null,
         _activeDocument = null,
@@ -81,15 +82,15 @@ define(function (require, exports, module) {
      * Description: Saves bookmars to localStorage.
     */
     function saveBookmarksToStorage() {
-        localStorage.removeItem('toshsharma.bookmarks');
-        localStorage.setObj('toshsharma.bookmarks', _activeBookmarks);
+        localStorage.removeItem('georapbox.bookmarks');
+        localStorage.setObj('georapbox.bookmarks', _activeBookmarks);
     }
     
     /**    
      * Description: Loads bookmarks from localStorage
      */
     function loadBookmarksFromStorage() {
-        var storedBookmarks = localStorage.getObj('toshsharma.bookmarks') || [],
+        var storedBookmarks = localStorage.getObj('georapbox.bookmarks') || [],
             editor = EditorManager.getCurrentFullEditor(),
             _codeMirror = editor._codeMirror,
             i = 0,
@@ -106,7 +107,7 @@ define(function (require, exports, module) {
 
             if (storedBookmarks[i].filePath === _activeDocument.file._path) {
                 _activeBookmarks[i].bookmark = _codeMirror.setBookmark({ line: storedBookmarks[i].originalLineNum, ch: 0 });
-                _codeMirror.addLineClass(storedBookmarks[i].originalLineNum, null, 'toshsharma-bookmarks-bookmark');
+                _codeMirror.addLineClass(storedBookmarks[i].originalLineNum, null, 'georapbox-bookmarks-bookmark');
             }
         }
     }
@@ -123,7 +124,7 @@ define(function (require, exports, module) {
         for (i; i < len; i++) {
             if (_activeBookmarks[i].filePath === _activeDocument.file._path) {
                 _activeBookmarks[i].bookmark = _codeMirror.setBookmark({ line: _activeBookmarks[i].originalLineNum, ch: 0 });
-                _codeMirror.addLineClass(_activeBookmarks[i].originalLineNum, null, 'toshsharma-bookmarks-bookmark');
+                _codeMirror.addLineClass(_activeBookmarks[i].originalLineNum, null, 'georapbox-bookmarks-bookmark');
             }
         }
     }
@@ -133,7 +134,7 @@ define(function (require, exports, module) {
      *              between 'View all' and 'view by current file'
     */
     function toggleBookmarksVisibility() {
-        var checkbox = $('#toshsharma-view-all input'),
+        var checkbox = $('#georapbox-view-all input'),
             inactiveLines = $bookmarksPanel.find('tr.inactive');
         
         if (checkbox.is(':checked')) {
@@ -193,8 +194,8 @@ define(function (require, exports, module) {
                 bookmark = _codeMirror.setBookmark({
                     line: pos.line,
                     ch: 0
-                }),                                                                                     // Only one bookmark per line
-                marker = _codeMirror.addLineClass(pos.line, null, 'toshsharma-bookmarks-bookmark');     // This marker is automatically tracked/updated by CodeMirror, when lines are added to/removed from the document.
+                }),
+                marker = _codeMirror.addLineClass(pos.line, null, 'georapbox-bookmarks-bookmark');
             
             _activeBookmarks.push({
                 originalLineNum: pos.line,
@@ -221,7 +222,7 @@ define(function (require, exports, module) {
                     
                 if (bmLinenum === linenum && _activeBookmarks[i].filePath === _activeDocument.file._path) {
                     bookmark.clear();
-                    _codeMirror.removeLineClass(pos.line, null, 'toshsharma-bookmarks-bookmark');
+                    _codeMirror.removeLineClass(pos.line, null, 'georapbox-bookmarks-bookmark');
                     _activeBookmarks.splice(i, 1);
                     break;
                 }
@@ -235,7 +236,7 @@ define(function (require, exports, module) {
             lineInfo = _codeMirror.lineInfo(line),
             markerClass = lineInfo.wrapClass;
         
-        if ((markerClass && markerClass.indexOf('toshsharma-bookmarks-bookmark') > -1) || action === 'remove') {
+        if ((markerClass && markerClass.indexOf('georapbox-bookmarks-bookmark') > -1) || action === 'remove') {
             removeBookmark(editor, pos);
         } else {
             addBookmark(editor, pos);
@@ -252,10 +253,6 @@ define(function (require, exports, module) {
     */
     function jumpToLine(_codeMirror, linenum) {
         _codeMirror.setCursor({ line: linenum, ch: 0 });
-        _codeMirror.addLineClass(linenum, null, 'toshsharma-bookmarks-flash');
-        window.setTimeout(function () {
-            _codeMirror.removeLineClass(linenum, null, 'toshsharma-bookmarks-flash');
-        }, 300);
     }
 
     /**
@@ -357,7 +354,7 @@ define(function (require, exports, module) {
                     pos = bookmark.find();
                 
                 if (pos) {
-                    _codeMirror.removeLineClass(pos.line, null, 'toshsharma-bookmarks-bookmark');
+                    _codeMirror.removeLineClass(pos.line, null, 'georapbox-bookmarks-bookmark');
                 }
                 bookmark.clear();
                 tempArr.push(i);
@@ -403,11 +400,11 @@ define(function (require, exports, module) {
         if (panel.isVisible()) {
             panel.hide();
             $bmlIcon.removeClass('active');
-            CommandManager.get('toshsharma.bookmarks.viewBookmarks').setChecked(false);
+            CommandManager.get('georapbox.bookmarks.viewBookmarks').setChecked(false);
         } else {
             panel.show();
             $bmlIcon.addClass('active');
-            CommandManager.get('toshsharma.bookmarks.viewBookmarks').setChecked(true);
+            CommandManager.get('georapbox.bookmarks.viewBookmarks').setChecked(true);
             renderBookmarks();
         }
     }
@@ -429,7 +426,7 @@ define(function (require, exports, module) {
      * Description: Loads external stylesheets.
     */
     function addStyles() {
-        ExtensionUtils.loadStyleSheet(module, './css/bookmarks.css');
+        ExtensionUtils.loadStyleSheet(module, 'css/bookmarks.css');
     }
     
     /**    
@@ -446,18 +443,18 @@ define(function (require, exports, module) {
         
         navigateMenu.addMenuDivider();
         
-        registerCommandHandler('toshsharma.bookmarks.toggleBookmark', 'Toggle Bookmark', toggleBookmark, 'Ctrl-F4', navigateMenu);
-        registerCommandHandler('toshsharma.bookmarks.nextBookmark', 'Next Bookmark', nextBookmark, 'F4', navigateMenu);
-        registerCommandHandler('toshsharma.bookmarks.previousBookmark', 'Previous Bookmark', previousBookmark, 'Shift-F4', navigateMenu);
-        registerCommandHandler('toshsharma.bookmarks.clearBookmarks', 'Clear Bookmarks', clearBookmarks, 'Ctrl-Shift-F4', navigateMenu);
-        registerCommandHandler('toshsharma.bookmarks.viewBookmarks', 'Bookmarks', togglePanel, 'Ctrl-Alt-B', viewMenu);
+        registerCommandHandler('georapbox.bookmarks.toggleBookmark', 'Toggle Bookmark', toggleBookmark, 'Ctrl-F4', navigateMenu);
+        registerCommandHandler('georapbox.bookmarks.nextBookmark', 'Next Bookmark', nextBookmark, 'F4', navigateMenu);
+        registerCommandHandler('georapbox.bookmarks.previousBookmark', 'Previous Bookmark', previousBookmark, 'Shift-F4', navigateMenu);
+        registerCommandHandler('georapbox.bookmarks.clearBookmarks', 'Clear Bookmarks', clearBookmarks, 'Ctrl-Shift-F4', navigateMenu);
+        registerCommandHandler('georapbox.bookmarks.viewBookmarks', 'Bookmarks', togglePanel, 'Ctrl-Alt-B', viewMenu);
     }
     
     /**    
      * Description: Adds event listeners.
     */
     function addHandlers() {
-        $bookmarksPanel = $('#toshsharma-bookmarks-panel');
+        $bookmarksPanel = $('#georapbox-bookmarks-panel');
         
         $bookmarksPanel.on('click', '.close', function () {
             togglePanel();
@@ -471,7 +468,7 @@ define(function (require, exports, module) {
                 toggleBookmark('remove');
             }
         }).on('focusout', 'td.tag input', saveBookmarkLabel).
-            on('change', '#toshsharma-view-all input[type="checkbox"]', toggleBookmarksVisibility);
+            on('change', '#georapbox-view-all input[type="checkbox"]', toggleBookmarksVisibility);
         
         $bmlIcon.on('click', togglePanel).
             appendTo('#main-toolbar .buttons');
@@ -484,7 +481,7 @@ define(function (require, exports, module) {
      * Description: Initialize the extension.
     */
     AppInit.appReady(function () {
-        panel = PanelManager.createBottomPanel('toshsharma.bookmarks.panel', $(bookmarksPanelTemplate), 200);
+        panel = PanelManager.createBottomPanel('georapbox.bookmarks.panel', $(bookmarksPanelTemplate), 200);
         addStyles();
         addMenuCommands();
         addHandlers();

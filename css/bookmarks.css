@@ -1,82 +1,75 @@
 /* Bookmarks */
-.toshsharma-bookmarks-bookmark .CodeMirror-linenumber { 
+.georapbox-bookmarks-bookmark .CodeMirror-linenumber { 
     background-color: #80C7F7 !important;
     color: #000 !important;
 }
-.toshsharma-bookmarks-bookmark.CodeMirror-activeline .CodeMirror-linenumber {
+.georapbox-bookmarks-bookmark.CodeMirror-activeline .CodeMirror-linenumber {
     border: 1px solid #80C7F7; !important;
     color: inherit !important;
 }
-.CodeMirror .toshsharma-bookmarks-flash {
-    -webkit-animation: toshsharma-bookmarks-flash 0.3s;
-}
-@-webkit-keyframes toshsharma-bookmarks-flash {
-    from { background: #A0D7F7; } 
-    to { background: inherit; }
-}
 
 /* Toolbar Icon */
-#toshsharma-bookmarks-icon {
-    background: url(../images/toshsharma.bookmarks-icon.svg) no-repeat 0 0;
+#georapbox-bookmarks-icon {
+    background: url(../images/georapbox.bookmarks-icon.svg) no-repeat 0 0;
 }
-#toshsharma-bookmarks-icon.active {
-    background: url(../images/toshsharma.bookmarks-icon-active.svg) no-repeat 0 0;
+#georapbox-bookmarks-icon.active {
+    background: url(../images/georapbox.bookmarks-icon-active.svg) no-repeat 0 0;
 }
 
 /* Panel */
 /* Panel header */
-#toshsharma-bookmarks-panel header h1 {
+#georapbox-bookmarks-panel header h1 {
     font-size: 14px;
     padding: 0;
     margin: 0;
     line-height: 1;
 }
-#toshsharma-bookmarks-panel #toshsharma-view-all {
+#georapbox-bookmarks-panel #georapbox-view-all {
 	position: absolute;
 	top: 0px;
 	right: 50px;
 }
-#toshsharma-bookmarks-panel #toshsharma-view-all input[type="checkbox"] {
+#georapbox-bookmarks-panel #georapbox-view-all input[type="checkbox"] {
 	margin-right: 3px;
 }
-#toshsharma-bookmarks-panel #toshsharma-view-all span {
+#georapbox-bookmarks-panel #georapbox-view-all span {
 	display: inline-block;
 	color: #898989;
 }
 
 /* Panel table */
-#toshsharma-bookmarks-panel table {
+#georapbox-bookmarks-panel table {
     width: 100%;
 }
-#toshsharma-bookmarks-panel table tr.inactive {
+#georapbox-bookmarks-panel table tr.inactive {
 	display: none;
 }
-#toshsharma-bookmarks-panel table tr.inactive.view-all {
+#georapbox-bookmarks-panel table tr.inactive.view-all {
 	display: table-row;
 	background-color: inherit;
 	opacity: 0.5;
 }
-#toshsharma-bookmarks-panel table tr.inactive td.delete {
+#georapbox-bookmarks-panel table tr.inactive td.delete {
 	display: none;
 }
-#toshsharma-bookmarks-panel table td.line {
+#georapbox-bookmarks-panel table td.line {
     width: 30px;
     padding-left: 10px;
 }
-#toshsharma-bookmarks-panel table td.tag {
+#georapbox-bookmarks-panel table td.tag {
     width: 150px;
     padding-right: 10px;
 }
-#toshsharma-bookmarks-panel table td.file {
+#georapbox-bookmarks-panel table td.file {
 	width: 150px;
 	padding-right: 10px;
 }
-#toshsharma-bookmarks-panel table td.delete {
+#georapbox-bookmarks-panel table td.delete {
     width: 7px;
     padding: 0 10px;
     vertical-align: middle;
 }
-#toshsharma-bookmarks-panel table td.delete a {
+#georapbox-bookmarks-panel table td.delete a {
     display: block;
     font-size: 15px;
     width: 17px;
@@ -86,18 +79,18 @@
     background-color: #c95353;
     border-radius: 34px;
 }
-#toshsharma-bookmarks-panel table td.delete a:hover {
+#georapbox-bookmarks-panel table td.delete a:hover {
     text-decoration: none;
     background-color: #ea2020;
 }
-#toshsharma-bookmarks-panel .labelIcon {
+#georapbox-bookmarks-panel .labelIcon {
     padding: 2px 0;
     color: #ffffff;
     background-color: #47b1fd;
     border-radius: 5px;
     text-align: center;
 }
-#toshsharma-bookmarks-panel .labelIcon input[type="text"] {
+#georapbox-bookmarks-panel .labelIcon input[type="text"] {
     position: relative;
     font-size: 13px;
     width: 92%;
