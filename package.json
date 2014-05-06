@@ -1,12 +1,21 @@
 {
-    "name": "toshsharma.bookmarks",
-    "title": "Brackets Bookmarks",
+    "name": "georapbox.bookmarks",
+    "title": "Bookmarks for Brackets",
     "description": "Navigate within a document using bookmarks. Cmd-F4 to toggle, F4 to jump to bookmarks.",
-    "homepage": "https://github.com/toshsharma/brackets-bookmarks",
-    "version": "1.0.1",
-    "author": "Ashutosh Sharma <ashutosh@adobe.com> (http://deceptiveweb.com)",
+    "homepage": "https://github.com/georapbox/brackets-bookmarks",
+    "version": "0.1.0",
+    "author": "George Raptis <georapbox@gmail.com> (http://georap.gr)",
     "license": "MIT",
+    "keywords": [
+        "brackets",
+        "bookmarks"
+    ],
+    "categories": [
+      "editing",
+      "navigation",
+      "visual"
+    ],
     "engines": {
-        "brackets": ">=0.20.0"
+        "brackets": ">=0.37.0"
     }
 }
