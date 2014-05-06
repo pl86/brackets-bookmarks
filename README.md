@@ -1,8 +1,15 @@
 ## Brackets Bookmarks Extension
 
-This is a [Brackets](https://github.com/adobe/brackets) extension that allows the user to navigate within a document using bookmarks.
+Extension for [Brackets](https://github.com/adobe/brackets) that allows the user to navigate within a document using bookmarks.
 
 **Tested with Brackets Sprint 38**
+
+## Installation
+### Git Clone
+1. Under main menu select **Help > Show Extensions Folder**
+2. Git clone this repository inside the folder user.
+
+
 
 ## Usage
 
