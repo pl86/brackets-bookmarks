@@ -5,11 +5,10 @@ Extension for [Brackets](https://github.com/adobe/brackets) that allows the user
 **Tested with Brackets Sprint 38**
 
 ## Installation
+
 ### Git Clone
 1. Under main menu select **Help > Show Extensions Folder**
 2. Git clone this repository inside the folder user.
-
-
 
 ## Usage
 
@@ -25,3 +24,7 @@ Bookmarks can be set using either keyboard shortcuts or entries under the Naviga
 ### Notes
 
 - Bookmarks can be set on individual lines (one bookmark per line)
+
+### Credits
+
+- [Ashutosh Sharma](https://github.com/toshsharma) for the original project.
