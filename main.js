@@ -251,8 +251,9 @@ define(function (require, exports, module) {
      * @param {Object} _codeMirror
      * @param {Number} linenum
     */
-    function jumpToLine(_codeMirror, linenum) {
-        _codeMirror.setCursor({ line: linenum, ch: 0 });
+    function jumpToLine(_activeEditor, linenum) {
+        _activeEditor.setCursorPos({ line: linenum, ch: 0 });
+		_activeEditor.centerOnCursor();
     }
 
     /**
@@ -276,7 +277,7 @@ define(function (require, exports, module) {
                 linenum = _activeBookmarks[i].originalLineNum;
             
                 if (linenum > currentLinenum) {
-                    jumpToLine(_codeMirror, linenum);
+                    jumpToLine(_activeEditor, linenum);
                     found = true;
                     break;
                 }
@@ -292,7 +293,7 @@ define(function (require, exports, module) {
             }
             
             if (firstBookmarkPos) {
-                jumpToLine(_codeMirror, firstBookmarkPos.line);
+                jumpToLine(_activeEditor, firstBookmarkPos.line);
             }
         }
     }
@@ -318,7 +319,7 @@ define(function (require, exports, module) {
                 linenum = _activeBookmarks[i].originalLineNum;
                 
                 if (linenum < currentLinenum) {
-                    jumpToLine(_codeMirror, linenum);
+                    jumpToLine(_activeEditor, linenum);
                     found = true;
                     break;
                 }
@@ -334,7 +335,7 @@ define(function (require, exports, module) {
             }
             
             if (lastBookmarkPos) {
-                jumpToLine(_codeMirror, lastBookmarkPos.line);
+                jumpToLine(_activeEditor, lastBookmarkPos.line);
             }
         }
     }
@@ -460,11 +461,11 @@ define(function (require, exports, module) {
             togglePanel();
         }).on('click', 'table tr', function () {
             if ($(this).find('td.file').attr('title') === _activeDocument.file._path) {
-                jumpToLine(_activeEditor._codeMirror, parseInt($(this).find('td.line').text(), 10) - 1);
+                jumpToLine(_activeEditor, parseInt($(this).find('td.line').text(), 10) - 1);
             }
         }).on('click', 'td.delete', function () {
             if ($(this).parent().find('td.file').attr('title') === _activeDocument.file._path) {
-                jumpToLine(_activeEditor._codeMirror, parseInt($(this).parent().find('td.line').text(), 10) - 1);
+                jumpToLine(_activeEditor, parseInt($(this).parent().find('td.line').text(), 10) - 1);
                 toggleBookmark('remove');
             }
         }).on('focusout', 'td.tag input', saveBookmarkLabel).
