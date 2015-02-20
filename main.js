@@ -409,14 +409,48 @@ define(function (require, exports, module) {
             renderBookmarks();
         }
     }
-    
-    /**    
+
+    /**
+     * Description: Actions that take place when document content changes.
+    */
+    function currentEditorChanged(cm, change) {
+        var lineDiff = change.text.length - change.removed.length,
+            bookmarksLineNrChanged = false,
+            i = 0,
+            len = _activeBookmarks.length,
+            editor = EditorManager.getCurrentFullEditor(),
+            _codeMirror = null;
+        if (!lineDiff || !editor) { return; }
+        _codeMirror = editor._codeMirror;
+        for (i; i < len; i++) {
+            if (_activeBookmarks[i].filePath === _activeDocument.file._path) {
+                if (_activeBookmarks[i].originalLineNum >= change.from.line) {
+                    _activeBookmarks[i].originalLineNum += lineDiff;
+                    bookmarksLineNrChanged = true;
+                }
+            }
+        }
+        if (bookmarksLineNrChanged) {
+            renderBookmarks();
+        }
+    }
+
+    /**
      * Description: Actions that take place when document changes.
     */
     function currentDocumentChanged() {
+        var editor = EditorManager.getCurrentFullEditor(),
+            _codeMirror = null;
+        if (!editor) { return; }
+        if (_activeEditor && _activeDocument) {
+            _activeEditor._codeMirror.off('change', currentEditorChanged);
+        }
+        _codeMirror = editor._codeMirror;
+        _codeMirror.on('change', currentEditorChanged);
+
         _activeEditor = EditorManager.getCurrentFullEditor();
         _activeDocument = DocumentManager.getCurrentDocument();
-        
+
         if (_activeDocument) {
             refreshBookmarks();
             renderBookmarks();
