@@ -419,18 +419,29 @@ define(function (require, exports, module) {
             i = 0,
             len = _activeBookmarks.length,
             editor = EditorManager.getCurrentFullEditor(),
-            _codeMirror = null;
+            _codeMirror = null,
+            toRemoveBookmarks = [];
         if (!lineDiff || !editor) { return; }
         _codeMirror = editor._codeMirror;
         for (i; i < len; i++) {
             if (_activeBookmarks[i].filePath === _activeDocument.file._path) {
                 if (_activeBookmarks[i].originalLineNum >= change.from.line) {
-                    _activeBookmarks[i].originalLineNum += lineDiff;
+                    if (_activeBookmarks[i].originalLineNum < change.to.line) {
+                        toRemoveBookmarks.unshift(i);
+                    } else {
+                        _activeBookmarks[i].originalLineNum += lineDiff;
+                    }
                     bookmarksLineNrChanged = true;
                 }
             }
         }
         if (bookmarksLineNrChanged) {
+            toRemoveBookmarks.forEach(function (i) {
+                _activeBookmarks[i].bookmark.clear();
+                _codeMirror.removeLineClass(_activeBookmarks[i].originalLineNum, null, 'georapbox-bookmarks-bookmark');
+                _activeBookmarks.splice(i, 1);
+            });
+            refreshBookmarks();
             renderBookmarks();
         }
     }
@@ -519,7 +530,7 @@ define(function (require, exports, module) {
      * Description: Initialize the extension.
     */
     AppInit.appReady(function () {
-        panel = PanelManager.createBottomPanel('georapbox.bookmarks.panel', $(bookmarksPanelTemplate), 200);
+        panel = PanelManager.createBottomPanel('georapbox.bookmarks.panel', $(bookmarksPanelTemplate), 100);
         addStyles();
         addMenuCommands();
         addHandlers();
