@@ -493,9 +493,12 @@ define(function (require, exports, module) {
         
         $bookmarksPanel.on('click', '.close', function () {
             togglePanel();
-        }).on('click', 'table tr', function () {
+        }).on('click', 'table tr', function (e) {
             if ($(this).find('td.file').attr('title') === _activeDocument.file._path) {
                 jumpToLine(_activeEditor, parseInt($(this).find('td.line').text(), 10) - 1);
+                if ('INPUT' !== e.target.nodeName) {
+                    _activeEditor.focus();
+                }
             }
         }).on('click', 'td.delete', function () {
             if ($(this).parent().find('td.file').attr('title') === _activeDocument.file._path) {
