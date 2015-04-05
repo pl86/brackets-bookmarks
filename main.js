@@ -36,15 +36,13 @@ define(function (require, exports, module) {
         ExtensionUtils = brackets.getModule('utils/ExtensionUtils'),
         PanelManager = brackets.getModule('view/PanelManager'),
         AppInit = brackets.getModule('utils/AppInit'),
-        
         $bmlIcon = $('<a title="Bookmarks" id="georapbox-bookmarks-icon"></a>'),
         bookmarksPanelTemplate = require('text!html/bookmarks-panel.html'),
         bookmarksRowTemplate = require('text!html/bookmarks-row.html'),
         panel,
         $bookmarksPanel,
-        
         COMMAND_ID = 'georapbox_execute',
-        
+        GUTTER_NAME = 'brackets-bookmaks-gutter',
         _activeEditor = null,
         _activeDocument = null,
         _activeBookmarks = [];
@@ -180,68 +178,65 @@ define(function (require, exports, module) {
             
             toggleBookmarksVisibility();
         }
-        
         return false;
     }
-    
-    /**    
+
+    function addBookmarkByLineIndex(cm, lineIndex) {
+        var bookmark = cm.setBookmark({
+                line: lineIndex,
+                ch: 0
+            });
+        //    marker = cm.addLineClass(lineIndex, null, 'georapbox-bookmarks-bookmark');
+        cm.setGutterMarker(lineIndex, GUTTER_NAME, makeMarker());
+
+        _activeBookmarks.push({
+            originalLineNum: lineIndex,
+            ch: 0,
+            bookmark: bookmark,
+            fileName: _activeDocument.file._name,
+            filePath: _activeDocument.file._path,
+            label: 'BOOKMARK'
+        });
+
+        _activeBookmarks.sort(function (a, b) {
+            return a.originalLineNum - b.originalLineNum;
+        });
+    }
+
+    function removeBookmarkByLineIndex(cm, lineIndex) {
+        var i = 0;
+        cm.setGutterMarker(lineIndex, GUTTER_NAME, null);
+
+        for (i = 0; i < _activeBookmarks.length; i++) {
+            var bookmark = _activeBookmarks[i].bookmark,
+                bmLinenum = bookmark.find().line;
+
+            if (bmLinenum === lineIndex && _activeBookmarks[i].filePath === _activeDocument.file._path) {
+                bookmark.clear();
+                cm.removeLineClass(lineIndex, null, 'georapbox-bookmarks-bookmark');
+                _activeBookmarks.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    /**
      * Description: Toggles Bookmark.
      * @param {String} action (optional) Description: If value is 'remove' it removes the current bookmark.
     */
     function toggleBookmark(action) {
-        function addBookmark(editor, pos) {
-            var _codeMirror = editor._codeMirror,
-                bookmark = _codeMirror.setBookmark({
-                    line: pos.line,
-                    ch: 0
-                }),
-                marker = _codeMirror.addLineClass(pos.line, null, 'georapbox-bookmarks-bookmark');
-            
-            _activeBookmarks.push({
-                originalLineNum: pos.line,
-                ch: 0,
-                bookmark: bookmark,
-                fileName: _activeDocument.file._name,
-                filePath: _activeDocument.file._path,
-                label: 'BOOKMARK'
-            });
-            
-            _activeBookmarks.sort(function (a, b) {
-                return a.originalLineNum - b.originalLineNum;
-            });
-        }
-        
-        function removeBookmark(editor, pos) {
-            var linenum = pos.line,
-                _codeMirror = editor._codeMirror,
-                i = 0;
-
-            for (i = 0; i < _activeBookmarks.length; i++) {
-                var bookmark = _activeBookmarks[i].bookmark,
-                    bmLinenum = bookmark.find().line;
-                    
-                if (bmLinenum === linenum && _activeBookmarks[i].filePath === _activeDocument.file._path) {
-                    bookmark.clear();
-                    _codeMirror.removeLineClass(pos.line, null, 'georapbox-bookmarks-bookmark');
-                    _activeBookmarks.splice(i, 1);
-                    break;
-                }
-            }
-        }
-
         var editor = EditorManager.getCurrentFullEditor(),
-            _codeMirror = editor._codeMirror,
-            pos = _codeMirror.getCursor(),
-            line = pos.line,
-            lineInfo = _codeMirror.lineInfo(line),
-            markerClass = lineInfo.wrapClass;
-        
-        if ((markerClass && markerClass.indexOf('georapbox-bookmarks-bookmark') > -1) || action === 'remove') {
-            removeBookmark(editor, pos);
+            cm = editor._codeMirror,
+            pos = cm.getCursor(),
+            lineIndex = pos.line,
+            hasBookmark = false;
+        hasBookmark = hasBookmarkAtLineIndex(cm, lineIndex);
+        if (hasBookmark || action === 'remove') {
+            removeBookmarkByLineIndex(cm, lineIndex);
         } else {
-            addBookmark(editor, pos);
+            addBookmarkByLineIndex(cm, lineIndex);
         }
-        
+
         saveBookmarksToStorage();
         renderBookmarks(); // Prints bookmarks on panel.
     }
@@ -446,6 +441,45 @@ define(function (require, exports, module) {
         }
     }
 
+    function makeMarker() {
+        var marker = document.createElement("div");
+        marker.style.color = "#fff";
+        marker.style.backgroundColor = "#80C7F7";
+        marker.style.marginLeft = '-13px';
+        marker.style.width = '12px';
+        marker.style.textAlign = 'center';
+        marker.innerHTML = "●";
+        return marker;
+    }
+
+    function hasBookmarkAtLineIndex(cm, lineIndex) {
+        var info;
+        if (!cm) {
+            return;
+        }
+        info = cm.lineInfo(lineIndex);
+        if (info.gutterMarkers && info.gutterMarkers.hasOwnProperty(GUTTER_NAME)) {
+            return true;
+        }
+        return false;
+    }
+
+    function gutterClick(cm, lineIndex, gutterId) {
+        var hasBookmark = hasBookmarkAtLineIndex(cm, lineIndex);
+        if (!cm) {
+            return;
+        }
+        //cm.setGutterMarker(lineIndex, GUTTER_NAME, hasBookmark ? null : makeMarker());
+        if (hasBookmark) {
+            removeBookmarkByLineIndex(cm, lineIndex);
+        } else {
+            addBookmarkByLineIndex(cm, lineIndex);
+        }
+
+        saveBookmarksToStorage();
+        renderBookmarks(); // Prints bookmarks on panel.
+    }
+
     /**
      * Description: Actions that take place when document changes.
     */
@@ -457,6 +491,15 @@ define(function (require, exports, module) {
             _activeEditor._codeMirror.off('change', currentEditorChanged);
         }
         _codeMirror = editor._codeMirror;
+
+        var gutters = _codeMirror.getOption("gutters").slice(0);
+        if (gutters.indexOf(GUTTER_NAME) === -1) {
+            gutters.push(GUTTER_NAME);
+            _codeMirror.setOption("gutters", gutters);
+            _codeMirror.on("gutterClick", gutterClick);
+        }
+
+
         _codeMirror.on('change', currentEditorChanged);
 
         _activeEditor = EditorManager.getCurrentFullEditor();
@@ -467,7 +510,7 @@ define(function (require, exports, module) {
             renderBookmarks();
         }
     }
-    
+
     /**
      * Description: Loads external stylesheets.
     */
