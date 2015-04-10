@@ -555,7 +555,12 @@ define(function (require, exports, module) {
         registerCommandHandler('georapbox.bookmarks.viewBookmarks', 'Bookmarks', togglePanel, 'Ctrl-Alt-B', viewMenu);
     }
 
-    /**    
+    function currentDocumentSaved() {
+        renderBookmarksPanel();
+        saveBookmarksToStorage();
+    }
+
+    /**
      * Description: Adds event listeners.
     */
     function addHandlers() {
@@ -582,7 +587,7 @@ define(function (require, exports, module) {
             appendTo('#main-toolbar .buttons');
 
         EditorManager.on('activeEditorChange', currentDocumentChanged).
-            on('documentSaved', renderBookmarksPanel);
+            on('documentSaved', currentDocumentSaved);
     }
 
     /**
